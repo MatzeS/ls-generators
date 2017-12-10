@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2017 Matthias
+Copyright (c) 2017 Matthias Sokolowski
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+However, this work contains some 3rd Party files listed here:
+    - sevenSegment.ls
+      found at https://github.com/t-oster/VisiCut/wiki/Laser-Script-7-Segment
+      as part of t-oster's repository VisiCut and added to the documentation by LuisLaas
+
+
+For reference to the libraries used by this project refer to the package.json file. 

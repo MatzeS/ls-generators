@@ -4,15 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc laserscript.ts bowl.ts kerf.ts grid.ts"
+    "build": "tsc",
+    "grid": "node bin/grid.js"
   },
   "author": "",
   "license": "MIT",
   "bin": {
-    "lc-grid": "./grid.js",
-    "lc-kerf": "./kerf.js",
-    "lc-bowl": "./bowl.js",
-    "lc-press": "./pressfit.js"
+    "lsg-grid": "./grid.js",
+    "lsg-kerf": "./kerf.js",
+    "lsg-bowl": "./bowl.js",
+    "lsg-press": "./pressfit.js"
   },
   "dependencies": {
     "commander": "^2.12.2",
