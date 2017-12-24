@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-However, this work contains some 3rd Party files listed here:
+This work contains some 3rd Party files listed here:
     - sevenSegment.ls
       found at https://github.com/t-oster/VisiCut/wiki/Laser-Script-7-Segment
       as part of t-oster's repository VisiCut and added to the documentation by LuisLaas

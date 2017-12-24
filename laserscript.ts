@@ -41,23 +41,27 @@ export class LaserScript {
     this.append(`set("speed", ${x});`);
   }
 
+  // cuts a line between two given points
   line(x1:number, y1:number, x2:number, y2:number){
     this.moveTo(x1, y1);
     this.lineTo(x2, y2);
   }
 
+  //moves the laser to the given point
   moveTo(x:number, y:number){
     this.append(`move(${x}, ${y});`);
     this.x = x;
     this.y = y;
   }
 
+  // cuts a line form the current position to the given point
   lineTo(x:number, y:number){
     this.append(`line(${x}, ${y});`);
     this.x = x;
     this.y = y;
   }
 
+  //cuts a line relative to the current position
   cut(x:number, y:number){
     this.lineTo(this.x + x, this.y + y);
   }
@@ -70,18 +74,12 @@ export class LaserScript {
     this.cut(0, -h);
   }
 
-  triangle(x:number, y:number, w:number, h:number){
-    this.line(x,   y,    x+w,  y); //top
-    this.line(x+w, y,    x+w,  y+h); // right
-    this.line(x+w, y+h,  x,    y); // bottom
-  }
-
   emit(file:string){
 
     if(file === undefined)
       console.log(this.laserScript);
     else
-      writeFile('generated/' + file + '.ls', this.laserScript, function(err:any) {
+      writeFile(file + '.ls', this.laserScript, function(err:any) {
         if (err) console.log(err);
       });
 

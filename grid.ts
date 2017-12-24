@@ -1,98 +1,137 @@
 #!/usr/bin/env node
 
+const numberTextSize = 3;
+const headingTextSize = 6;
+const textSpacing = 2;
+
+const triangleWidth = 10;
+const triangleHeight = 6;
+const triangleSpacing = 3;
+
+const borderSpacing = 8;
+
+const separationSpeed = 50;
+const separationPower = 100;
+
 import program = require('commander');
 import {LaserScript} from './laserscript';
 
 let ls = new LaserScript();
 
+function triangle(x: number, y: number, w: number, h: number) {
+    ls.line(x, y, x + w, y); //top
+    ls.line(x + w, y, x + w, y + h); // right
+    ls.line(x + w, y + h, x, y); // bottom
+}
+
+
 let inquirer = require("inquirer");
 
 let query = [
-    {type: 'input', name: 'speedStart', message: 'Start value for speed?', default: '10'},
-    {type: 'input', name: 'speedInc', message: 'Increase power per step?', default: '10'},
-    {type: 'input', name: 'speedNum', message: 'Number of speed steps?', default: '10'},
-    {type: 'input', name: 'powerStart', message: 'Start value for power?', default: '10'},
-    {type: 'input', name: 'powerInc', message: 'Increase power per step?', default: '10'},
-    {type: 'input', name: 'powerNum', message: 'Number of speed steps?', default: '10'},
-    {type: 'input', name: 'width', message: 'Width of a single triangle?', default: '5'},
-    {type: 'input', name: 'height', message: 'Height of a single triangle?', default: '10'},
-    {type: 'input', name: 'file', message: 'Filename?', default: 'grid'},
+    {type: 'input', name: 'speedStart', message: 'Start value for speed:', default: '10'},
+    {type: 'input', name: 'speedInc', message: 'Increase power per step:', default: '10'},
+    {type: 'input', name: 'speedNum', message: 'Number of speed steps::', default: '10'},
+    {type: 'input', name: 'powerStart', message: 'Start value for power:', default: '10'},
+    {type: 'input', name: 'powerInc', message: 'Increase power per step:', default: '10'},
+    {type: 'input', name: 'powerNum', message: 'Number of speed steps:', default: '10'},
+    {type: 'input', name: 'separationPower', message: 'Separation power', default: '100'},
+    {type: 'input', name: 'separationSpeed', message: 'Separation speed', default: '50'},
+    {type: 'input', name: 'file', message: 'Filename?', default: 'generated/grid'},
 ];
 
-inquirer.prompt(query).then(function (answers:any) {
+inquirer.prompt(query).then(function (answers: any) {
 
-    let file:string = answers.file;
+    let file: string = answers.file;
 
-    let w:number = Number(answers.width);
-    let h:number = Number(answers.height);
+    let speedNumber: number = Number(answers.speedNum);
+    let powerNumber: number = Number(answers.powerNum);
 
-    let ns:number = Number(answers.speedNum);
-    let np:number = Number(answers.powerNum);
+    let speedStart: number = Number(answers.powerStart);
+    let powerStart: number = Number(answers.speedStart);
 
-    let ss:number = Number(answers.powerStart);
-    let sp:number = Number(answers.speedStart);
-
-    let is:number = Number(answers.speedInc);
-    let ip:number = Number(answers.powerInc);
+    let speedIncrement: number = Number(answers.speedInc);
+    let powerIncrement: number = Number(answers.powerInc);
 
     // 0 is invalid
-    if (ss == 0) {
-        ss = is;
-        ns--;
+    if (speedStart == 0) {
+        speedStart = speedIncrement;
+        speedNumber--;
+        console.log('Speed of 0 is invalid, removing first value');
     }
-    if (sp == 0) {
-        sp = ip;
-        np--;
-    }
-
-    let perimeter = 5;
-    let padding = 3;
-    let tw = (w / 2 - 1);
-    let lt = 5;
-    let textPadding = 2;
-
-    ls.cutText("SPEED", 30, perimeter, lt);
-
-    let powerTextTopPadding = 30;
-    ls.cutText("P", perimeter, powerTextTopPadding + 0 * (2 * lt + textPadding), lt);
-    ls.cutText("O", perimeter, powerTextTopPadding + 1 * (2 * lt + textPadding), lt);
-    ls.cutText("W", perimeter, powerTextTopPadding + 2 * (2 * lt + textPadding), lt);
-    ls.cutText("E", perimeter, powerTextTopPadding + 3 * (2 * lt + textPadding), lt);
-    ls.cutText("R", perimeter, powerTextTopPadding + 4 * (2 * lt + textPadding), lt);
-
-    let lastX = 0;
-    let lastY = 0;
-
-    for (let p = 0; p < np; p++) {
-        let power = p * ip + sp;
-        ls.cutText(`${power}`, perimeter + lt + textPadding, perimeter + 2 * lt + textPadding + 2*tw + textPadding + p * (h + padding), tw);
+    if (powerStart == 0) {
+        powerStart = powerIncrement;
+        powerNumber--;
+        console.log('Power of 0 is invalid, removing first value');
     }
 
-    for (let s = 0; s < ns; s++) { // speed on x axis
+    const powerHeadingX = borderSpacing;
+    const powerNumberX = powerHeadingX + 2 * headingTextSize + textSpacing;
 
-        let x = perimeter + lt + textPadding + 2 * (tw + textPadding) + s * (w + padding);
-        let speed = s * is + ss;
+    const speedHeadingY = borderSpacing;
+    const speedNumberY = speedHeadingY + 2 * headingTextSize + textSpacing;
 
-        ls.cutText(`${speed}`, x, perimeter + 2 * lt + textPadding, tw);
 
-        for (let p = 0; p < np; p++) { // power on y axis
+    const gridXOrigin = borderSpacing + headingTextSize + textSpacing + 2 * (numberTextSize + textSpacing) + textSpacing;
+    const gridYOrigin = borderSpacing + 2 * headingTextSize + textSpacing + 2 * numberTextSize + textSpacing;
+    const gridWidth = speedNumber * (triangleWidth + triangleSpacing);
+    const gridHeight = powerNumber * (triangleHeight + triangleSpacing);
 
-            let y = perimeter + 2*lt + textPadding + 2*tw + textPadding + p * (h + padding);
-            let power = p * ip + sp;
+
+    const totalWidth = gridXOrigin + gridWidth + borderSpacing;
+    const totalHeight = gridYOrigin + gridHeight + borderSpacing;
+
+    const speedHeadingX = gridXOrigin + (gridWidth - 5 * 1.5 * headingTextSize) / 2;
+    const powerHeadingY = gridYOrigin + (gridHeight - 5 * 2.5 * headingTextSize) / 2;
+
+
+    ls.cutText("SPEED", speedHeadingX, speedHeadingY, headingTextSize);
+
+    const word = 'POWER';
+    for (let i = 0; i < word.length; i++)
+        ls.cutText(word.charAt(i),
+            powerHeadingX,
+            powerHeadingY + i * (2.5 * headingTextSize),
+            headingTextSize);
+
+
+    for (let p = 0; p < powerNumber; p++) {
+        let power = powerStart + p * powerIncrement;
+        ls.cutText(`${power}`,
+            powerHeadingX + headingTextSize * 1.5,
+            gridYOrigin + p * (triangleHeight + triangleSpacing),
+            numberTextSize);
+    }
+
+    for (let s = 0; s < speedNumber; s++) {
+        let speed = speedStart + s * speedIncrement;
+
+        ls.cutText(`${speed}`,
+            gridXOrigin + s * (triangleWidth + triangleSpacing) + (triangleWidth - numberTextSize * 2.5) / 2,
+            speedHeadingY + 2 * headingTextSize + textSpacing,
+            numberTextSize
+        )
+        ;
+    }
+
+
+    for (let s = 0; s < speedNumber; s++) { // speed on x axis
+        let x = gridXOrigin + s * (triangleWidth + triangleSpacing);
+        let speed = speedStart + s * speedIncrement;
+
+        for (let p = 0; p < powerNumber; p++) { // power on y axis
+            let y = gridYOrigin + p * (triangleHeight + triangleSpacing);
+            let power = powerStart + p * powerIncrement;
 
             ls.speed(speed);
             ls.power(power);
-            ls.triangle(x, y, w, h);
-
-            lastX = x;
-            lastY = y;
-
+            triangle(x, y, triangleWidth, triangleHeight);
         }
     }
 
-    ls.speed(50);
-    ls.power(100);
-    ls.rect(0, 0, lastX + w + perimeter, lastY + h + perimeter);
+
+    ls.speed(separationSpeed);
+    ls.power(separationPower);
+    ls.rect(0, 0, totalWidth, totalHeight);
 
     ls.emit(file);
 

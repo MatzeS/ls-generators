@@ -1,5 +1,5 @@
 {
-  "name": "kerfpatterngenerator",
+  "name": "ls-generators",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,10 +10,10 @@
   "author": "",
   "license": "MIT",
   "bin": {
-    "lsg-grid": "./grid.js",
-    "lsg-kerf": "./kerf.js",
-    "lsg-bowl": "./bowl.js",
-    "lsg-press": "./pressfit.js"
+    "lsg-grid": "bin/grid.js",
+    "lsg-kerf": "bin/kerf.js",
+    "lsg-bowl": "bin/bowl.js",
+    "lsg-press": "bin/press-fit.js"
   },
   "dependencies": {
     "commander": "^2.12.2",
